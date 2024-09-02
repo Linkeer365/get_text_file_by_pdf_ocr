@@ -55,7 +55,9 @@ def convert_pdf_to_jpg(pdf_out_path, output_folder, poppler_path,section_name_pi
         output_filename = f"{os.path.basename(pdf_out_path).replace(".pdf","")}_{str(idx).zfill(3)}.jpg"
         output_path = os.path.join(output_folder2, output_filename)
         image.save(output_path, 'JPEG')
-
+    
+    return output_folder2
+    
 def main():
     for idx,file_path in enumerate(os.listdir(pdf_folder),1):
         if file_path.endswith(".pdf"):
@@ -71,11 +73,11 @@ def main():
                 p = Pinyin()
                 section_name_pinyin = p.get_pinyin(section_name)
                 pdf_section_path = make_pdf_section(pdf_path,pdf_section_folder,section_name_pinyin,from_page_idx,to_page_idx)
-                convert_pdf_to_jpg(pdf_section_path,output_folder,poppler_path,section_name_pinyin)
+                output_folder2 = convert_pdf_to_jpg(pdf_section_path,output_folder,poppler_path,section_name_pinyin)
                 out_s_list=[]
-                for output_file_path in os.listdir(output_folder):
+                for output_file_path in os.listdir(output_folder2):
                     if output_file_path.endswith(".jpg"):
-                        output_jpg_path = output_folder + os.sep + output_file_path
+                        output_jpg_path = output_folder2 + os.sep + output_file_path
                         # out_s = ocr_by_cnocr(output_jpg_path)
                         out_s = ocr_PaddleOCR(output_jpg_path)
                         out_s_list.append(out_s)
